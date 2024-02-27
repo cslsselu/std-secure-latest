@@ -12,6 +12,7 @@ import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useTimer } from 'react-timer-hook';
+import Logger from './Logger';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -22,6 +23,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 function ViewPost() {
   const aceessTimer = 1000 * 10; // 5 sec
   const postId = sessionStorage.getItem("postId");
+  const [documentLoaded, setDocumentLoaded] = useState(false);
+
 
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -143,8 +146,14 @@ function ViewPost() {
       alert("Incorrect password. Access denied.");
     }
   };
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
+
+  const onDocumentLoadSuccess = ({ numPages, link }) => {
+    if (!documentLoaded) {
+     // alert(numPages);
+      Logger({ eventType: 'view post', remarks: link });
+      setNumPages(numPages);
+      setDocumentLoaded(true);
+    }
   };
   // const {
   //   totalSeconds,
@@ -230,7 +239,7 @@ function ViewPost() {
                       file={{
                         url: post.postText,
                       }}
-                      onLoadSuccess={onDocumentLoadSuccess}
+                      onLoadSuccess={({ numPages }) => onDocumentLoadSuccess({ numPages, link: `${post.postText}` })}
                       style={{
                         display: "flex",
                         justifyContent: "center",

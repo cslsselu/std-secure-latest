@@ -36,6 +36,11 @@ function Admin() {
     setisLoading(false);
   };
 
+  const handleViewLogs = (user) => {
+    sessionStorage.setItem("userEmail", user.email);
+    window.open("/viewLogs", "_blank");
+};
+
   let filteredUsers = users;
   if (selectOption === "admin") {
     filteredUsers = users.filter((user) => user.isAdmin && user.id !== uid);
@@ -103,6 +108,7 @@ function Admin() {
                 <th scope="col">Role</th>
                 <th scope="col">Approved</th>
                 <th scope="col">Actions</th>
+                <th scope="col">Logs</th>
               </tr>
             </thead>
             <tbody>
@@ -153,6 +159,15 @@ function Admin() {
                       </button>
                     </div>
                   </td>
+                  <td>
+                <button
+                  className="btn edit-button"
+                  style={{ padding: "0px", color: "blue" }}
+                  onClick={() => handleViewLogs(user)}
+                >
+                  View Logs
+                </button>
+              </td>
                 </tr>
               ))}
             </tbody>

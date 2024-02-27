@@ -9,6 +9,7 @@ import { auth, db } from "./firebase";
 import Landing from "./pages/Landing";
 import Posts from "./pages/Posts";
 import ViewPost from "./pages/ViewPost";
+import ViewLogs from "./pages/ViewLogs";
 import "./auth/create-admin";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, getDocs, updateDoc,doc} from "firebase/firestore";
@@ -18,6 +19,7 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import DescriptionState from "./components/DescriptionState";
 import PdfList from "./pages/PdfList";
+import Logger from './pages/Logger';
 
 
 function App() {
@@ -74,13 +76,16 @@ function App() {
     );
   };
 
-  const signUserOut = () => {
-    signOut(auth).then(() => {
+  const signUserOut = async () => {
+    try {
+      Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
+       signOut(auth);
       localStorage.clear();
-      //sessionStorage.clear();
       setIsAuth(false);
       window.location.pathname = "/";
-    });
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   useEffect(() => {
@@ -271,6 +276,7 @@ function App() {
                 element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}
               />
               <Route path="/view" element={<ViewPost />} />
+              <Route path="/viewLogs" element={<ViewLogs />} />
               {isAdmin ? (
                 <>
                   <Route

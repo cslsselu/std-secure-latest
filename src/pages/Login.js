@@ -18,6 +18,7 @@ import {
   where,
 } from "firebase/firestore";
 import { toast } from "react-toastify";
+import Logger from './Logger';
 
 function Login({ setIsAuth }) {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ function Login({ setIsAuth }) {
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then(async (userCredential) => {
+        Logger({ eventType: 'login'});
         setIsAuth(true);
         localStorage.setItem("isAuth", true);
 
@@ -82,6 +84,7 @@ function Login({ setIsAuth }) {
           localStorage.setItem("isAuth", true);
           localStorage.setItem("uid", userCredential.user.uid);
           navigate("/posts");
+          Logger({ eventType: 'login'});
         }
         const name = userCredential.user.displayName;
         const email = userCredential.user.email;
