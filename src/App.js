@@ -78,7 +78,7 @@ function App() {
 
   const signUserOut = async () => {
     try {
-      Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
+      await Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
        signOut(auth);
       localStorage.clear();
       setIsAuth(false);
