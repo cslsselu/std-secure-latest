@@ -9,7 +9,6 @@ import { auth, db } from "./firebase";
 import Landing from "./pages/Landing";
 import Posts from "./pages/Posts";
 import ViewPost from "./pages/ViewPost";
-import ViewLogs from "./pages/ViewLogs";
 import "./auth/create-admin";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, getDocs, updateDoc,doc} from "firebase/firestore";
@@ -19,7 +18,6 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import DescriptionState from "./components/DescriptionState";
 import PdfList from "./pages/PdfList";
-import Logger from './pages/Logger';
 
 
 function App() {
@@ -76,16 +74,13 @@ function App() {
     );
   };
 
-  const signUserOut = async () => {
-    try {
-      await Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
-       signOut(auth);
+  const signUserOut = () => {
+    signOut(auth).then(() => {
       localStorage.clear();
+      //sessionStorage.clear();
       setIsAuth(false);
       window.location.pathname = "/";
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+    });
   };
 
   useEffect(() => {
@@ -217,6 +212,9 @@ function App() {
               <Link to='/team' className="nav-link" >
                Team
               </Link>
+              <Link to='/pdfList' className="nav-link" >
+               PdfList
+              </Link>
 
               {isAuth ? (
                 <>
@@ -276,7 +274,6 @@ function App() {
                 element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}
               />
               <Route path="/view" element={<ViewPost />} />
-              <Route path="/viewLogs" element={<ViewLogs />} />
               {isAdmin ? (
                 <>
                   <Route
