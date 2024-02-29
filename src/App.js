@@ -74,13 +74,20 @@ function App() {
     );
   };
 
-  const signUserOut = () => {
-    signOut(auth).then(() => {
+
+  const signUserOut = async () => {
+    try {
+      await Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
+  
+       signOut(auth);
+  
       localStorage.clear();
       //sessionStorage.clear();
       setIsAuth(false);
       window.location.pathname = "/";
-    });
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   useEffect(() => {
@@ -213,7 +220,10 @@ function App() {
                Team
               </Link>
               <Link to='/pdfList' className="nav-link" >
+
                Article List
+
+
               </Link>
 
               {isAuth ? (

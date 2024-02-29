@@ -23,6 +23,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 function ViewPost() {
   const aceessTimer = 1000 * 10; // 5 sec
   const postId = sessionStorage.getItem("postId");
+  const [documentLoaded, setDocumentLoaded] = useState(false);
 
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -145,8 +146,13 @@ function ViewPost() {
       alert("Incorrect password. Access denied.");
     }
   };
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
+  const onDocumentLoadSuccess = ({ numPages, link }) => {
+    if (!documentLoaded) {
+     // alert(numPages);
+      Logger({ eventType: 'view post', remarks: link });
+      setNumPages(numPages);
+      setDocumentLoaded(true);
+    }
   };
   // const {
   //   totalSeconds,
