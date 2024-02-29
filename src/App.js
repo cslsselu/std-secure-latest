@@ -186,7 +186,7 @@ function App() {
             to="/"
             style={{ marginLeft: "55px", color: "orange" }}
           >
-            SECURE
+            E-Lib
           </Link>
 
           <button
@@ -213,7 +213,7 @@ function App() {
                Team
               </Link>
               <Link to='/pdfList' className="nav-link" >
-               PdfList
+               Article List
               </Link>
 
               {isAuth ? (
@@ -221,7 +221,7 @@ function App() {
                   {isApproved && (
                     <>
                       <Link to="/posts" className="nav-link">
-                        Articles
+                        Featured Article
                       </Link>
                       {isAdmin && (
                         <>

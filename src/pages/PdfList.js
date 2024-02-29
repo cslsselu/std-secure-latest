@@ -62,13 +62,13 @@ const PdfList = () => {
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>PDF Lists</h2>
-      <Table>
+      <Table >
         <thead>
-          <tr>
+          <tr style={{backgroundColor:'gray'}}>
             <th>#</th>
-            <th>Article</th>
-            <th>Author</th>
-            <th>View</th>
+            <th><strong>ARTICLE TITLE</strong></th>
+            <th>AUTHOR</th>
+            <th>VIEW</th>
           </tr>
         </thead>
         <tbody>
