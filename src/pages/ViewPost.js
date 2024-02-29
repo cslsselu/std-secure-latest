@@ -12,7 +12,7 @@ import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useTimer } from 'react-timer-hook';
-import Logger from './Logger';
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -165,6 +165,15 @@ function ViewPost() {
 
   return (
     <>
+     <style type="text/css">
+        {`
+          @media print {
+            * {
+              display: none;
+            }
+          }
+        `}
+      </style>
       {isOnline ? (
         <>
           {post && post.isActive ? (
@@ -219,7 +228,21 @@ function ViewPost() {
                       <div className="title">
                         <h1> {post.title}</h1>
                       </div>
+                      <form >
+        <div className="search-bar">
+          <input
+            type="text"
+            style={{ width: "160px" }}
+            placeholder="Search Topic..."
+          />
+          <span className="search-icon">
+            <FaMagnifyingGlass />
+          </span>
+        </div>
+      </form>
                     </div>
+                    
+        
                     <div
                       className="postTextContainer"
                       style={{ height: "80%",display:'flex', alignContent:'center', justifyContent:'center'}}
@@ -238,7 +261,7 @@ function ViewPost() {
                       file={{
                         url: post.postText,
                       }}
-                      onLoadSuccess={({ numPages }) => onDocumentLoadSuccess({ numPages, link: `${post.postText}` })}
+                      onLoadSuccess={onDocumentLoadSuccess}
                       style={{
                         display: "flex",
                         justifyContent: "center",

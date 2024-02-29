@@ -9,7 +9,6 @@ import { auth, db } from "./firebase";
 import Landing from "./pages/Landing";
 import Posts from "./pages/Posts";
 import ViewPost from "./pages/ViewPost";
-import ViewLogs from "./pages/ViewLogs";
 import "./auth/create-admin";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, getDocs, updateDoc,doc} from "firebase/firestore";
@@ -19,7 +18,6 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import DescriptionState from "./components/DescriptionState";
 import PdfList from "./pages/PdfList";
-import Logger from './pages/Logger';
 
 
 function App() {
@@ -76,6 +74,7 @@ function App() {
     );
   };
 
+
   const signUserOut = async () => {
     try {
       await Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
@@ -83,6 +82,7 @@ function App() {
        signOut(auth);
   
       localStorage.clear();
+      //sessionStorage.clear();
       setIsAuth(false);
       window.location.pathname = "/";
     } catch (error) {
@@ -193,7 +193,7 @@ function App() {
             to="/"
             style={{ marginLeft: "55px", color: "orange" }}
           >
-            SECURE
+            E-Lib
           </Link>
 
           <button
@@ -220,7 +220,10 @@ function App() {
                Team
               </Link>
               <Link to='/pdfList' className="nav-link" >
-               PdfList
+
+               Article List
+
+
               </Link>
 
               {isAuth ? (
@@ -228,7 +231,7 @@ function App() {
                   {isApproved && (
                     <>
                       <Link to="/posts" className="nav-link">
-                        Articles
+                        Featured Article
                       </Link>
                       {isAdmin && (
                         <>
@@ -281,7 +284,6 @@ function App() {
                 element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}
               />
               <Route path="/view" element={<ViewPost />} />
-              <Route path="/viewLogs" element={<ViewLogs />} />
               {isAdmin ? (
                 <>
                   <Route
