@@ -34,14 +34,24 @@ const PdfList = () => {
     try{
     const selectedPdf= pdfs.find((pdf)=>pdf.id === pdfId)
     const postCollection = collection(db, 'posts')
+    const querySnapShot = await getDocs(postCollection)
+    const existingPost = querySnapShot.docs.find(data =>data.data().articleId === selectedPdf.id)
+    if(existingPost){
+      sessionStorage.setItem('postId', existingPost.id)
+      window.open('/view','_blank')
+    }
+    else{
     const newPostRef = await addDoc(postCollection,{
       title:selectedPdf.title,
       postText: selectedPdf.url,
-      password:''
+      password:'',
+      articleId:selectedPdf.id
+
     })
     sessionStorage.setItem('postId', newPostRef.id)
     window.open('/view', '_blank')
   }
+}
   catch(e){
     console.log("Error",e)
   }
