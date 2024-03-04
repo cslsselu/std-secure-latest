@@ -30,15 +30,67 @@ const PdfList = () => {
     };
     fetchPdfs();
   }, [db]);
+  const handleClick = async (pdfId) => {
+    try{
+    const selectedPdf= pdfs.find((pdf)=>pdf.id === pdfId)
+    const postCollection = collection(db, 'posts')
+    const querySnapShot = await getDocs(postCollection)
+    const existingPost = querySnapShot.docs.find(data =>data.data().articleId === selectedPdf.id)
+    if(existingPost){
+      sessionStorage.setItem('postId', existingPost.id)
+      window.open('/view','_blank')
+    }
+    else{
+    const newPostRef = await addDoc(postCollection,{
+      title:selectedPdf.title,
+      postText: selectedPdf.url,
+      password:'',
+      articleId:selectedPdf.id
+
+    })
+    sessionStorage.setItem('postId', newPostRef.id)
+    window.open('/view', '_blank')
+  }
+}
+  catch(e){
+    console.log("Error",e)
+  }
+  };
+  
+
 
   return (
     <div>
-        <p>There should be list of pdf..</p>
-      {pdfs.map((pdf) => (
-        <div key={pdf.id}>
-          <a href={pdf.url} target="_blank" rel="noopener noreferrer">{pdf.title}</a>
-        </div>
-      ))}
+      <h2 style={{ textAlign: 'center' }}>PDF Lists</h2>
+      <Table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Article</th>
+            <th>Author</th>
+            <th>View</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pdfs.map((pdf, index) => (
+            <tr key={pdf.id}>
+              <td>{index + 1}</td>
+              <td>{pdf.title}</td>
+              <td>{pdf.Author}</td>
+              <td>
+                <Button
+                  style={{ fontSize: '8px' }}
+                 onClick={()=>{
+                  handleClick(pdf.id)
+                 }}
+                >
+                  View
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 };
