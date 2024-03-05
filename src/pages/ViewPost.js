@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useTimer } from 'react-timer-hook';
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import Logger from './Logger'
+import Logger from './Logger';
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -246,7 +247,7 @@ function ViewPost() {
         
                     <div
                       className="postTextContainer"
-                      style={{ height: "80%",display:'flex', alignContent:'center', justifyContent:'center'}}
+                      style={{ height: "80%", display:'flex', alignContent:'center', justifyContent:'center'}}
                       onContextMenu={(e) => e.preventDefault()}
                     >
                       {isTimeUp ? (
@@ -267,10 +268,16 @@ function ViewPost() {
                         display: "flex",
                         justifyContent: "center",
                         position: "relative",
+                        height: "100%",
+                        width: "80%",
+                        margin: "0 auto"
+                    
                       }}
                     >
                     {console.log("here is what i need",post.postText)}
-                      <Page pageNumber={pageNumber}  renderAnnotationLayer={false} renderTextLayer={false} />
+                    {[...Array(numPages).keys()].map((pageIndex) => (
+    <Page key={`page_${pageIndex + 1}`} pageNumber={pageIndex + 1} renderAnnotationLayer={false} renderTextLayer={false} />
+  ))}
                       <div
                         style={{
                           position: "absolute",
