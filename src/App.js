@@ -18,7 +18,7 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import PdfList from "./pages/PdfList";
 import Logger from '../src/pages/Logger'
-import { useLocation } from "react-router-dom";import Logger from '../src/pages/Logger';
+import { useLocation } from "react-router-dom";
 
 
 function App() {
