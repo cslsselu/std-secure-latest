@@ -16,9 +16,9 @@ import { ToastContainer, toast } from "react-toastify";
 import Admin from "./pages/AdminDashboard";
 import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
-import DescriptionState from "./components/DescriptionState";
 import PdfList from "./pages/PdfList";
-
+import Logger from '../src/pages/Logger'
+import { useLocation } from "react-router-dom";
 
 function App() {
   const postId = sessionStorage.getItem("postId") ;
@@ -73,6 +73,21 @@ function App() {
       }
     );
   };
+  const Footer =()=>{
+    const location = useLocation()
+    const isViewPost = location.pathname.includes('/view')
+    return(
+      <>
+      {
+        isViewPost ? null :(
+          <footer className="footer">
+          <p>Copyright © Std Secure 2023</p>
+        </footer>
+        )
+      }
+      </>
+    )
+  }
 
 
   const signUserOut = async () => {
@@ -178,7 +193,7 @@ function App() {
   {return (
     <>
    
-      <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark" style={{position:'fixed'}}>
         <div className="container-fluid">
           <div className="logo" style={{ position: "absolute", top: "1px" }}>
             <img
@@ -342,9 +357,8 @@ function App() {
           <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
         </Routes>
       )}
-      <footer style={{textAlign:"center", backgroundColor:"black"}}>
-  <p>Copyright © Std Secure 2023</p>
-</footer>
+      <Footer/>
+  
 
     </>
   )
