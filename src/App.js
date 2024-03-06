@@ -18,6 +18,7 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import DescriptionState from "./components/DescriptionState";
 import PdfList from "./pages/PdfList";
+import Logger from '../src/pages/Logger';
 
 
 function App() {
