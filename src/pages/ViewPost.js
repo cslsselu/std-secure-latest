@@ -23,7 +23,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 
 function ViewPost() {
-  const aceessTimer = 1000 * 10; // 5 sec
+  const aceessTimer = 1000 *4; // 5 sec
   const postId = sessionStorage.getItem("postId");
   const [documentLoaded, setDocumentLoaded] = useState(false);
 
@@ -247,7 +247,8 @@ function ViewPost() {
         
                     <div
                       className="postTextContainer"
-                      style={{ height: "80%", display:'flex', alignContent:'center', justifyContent:'center'}}
+                      style={{ height: "auto",display:'flex', alignContent:'center', justifyContent:'center',  padding:'20px',
+                      marginTop:'50px'}}
                       onContextMenu={(e) => e.preventDefault()}
                     >
                       {isTimeUp ? (
@@ -264,10 +265,12 @@ function ViewPost() {
                         url: post.postText,
                       }}
                       onLoadSuccess={onDocumentLoadSuccess}
+                      
                       style={{
                         display: "flex",
                         justifyContent: "center",
                         position: "relative",
+                       
                         height: "100%",
                         width: "80%",
                         margin: "0 auto"
