@@ -18,11 +18,7 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import PdfList from "./pages/PdfList";
 import Logger from '../src/pages/Logger'
-<<<<<<< HEAD
-=======
 import { useLocation } from "react-router-dom";
-
->>>>>>> 018e2f160371c5cc307b6bcfe10ef4485dd85c59
 
 function App() {
   const postId = sessionStorage.getItem("postId") ;

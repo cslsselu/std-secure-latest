@@ -13,13 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useTimer } from 'react-timer-hook';
 import { FaMagnifyingGlass } from "react-icons/fa6";
-<<<<<<< HEAD
-import Logger from './Logger'
-=======
 import Logger from './Logger';
 
 
->>>>>>> 018e2f160371c5cc307b6bcfe10ef4485dd85c59
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
