@@ -148,10 +148,10 @@ function ViewPost() {
       alert("Incorrect password. Access denied.");
     }
   };
-  const onDocumentLoadSuccess = ({ numPages, link }) => {
+  const onDocumentLoadSuccess = ({ numPages, title }) => {
     if (!documentLoaded) {
      // alert(numPages);
-      Logger({ eventType: 'view post', remarks: link });
+      Logger({ eventType: 'view post', remarks: title });
       setNumPages(numPages);
       setDocumentLoaded(true);
     }
@@ -264,7 +264,8 @@ function ViewPost() {
                       file={{
                         url: post.postText,
                       }}
-                      onLoadSuccess={onDocumentLoadSuccess}
+                  
+                     onLoadSuccess={({ numPages }) => onDocumentLoadSuccess({ numPages, title: `${post.title}` })}
                       
                       style={{
                         display: "flex",
