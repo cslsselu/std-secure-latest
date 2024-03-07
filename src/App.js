@@ -9,6 +9,7 @@ import { auth, db } from "./firebase";
 import Landing from "./pages/Landing";
 import Posts from "./pages/Posts";
 import ViewPost from "./pages/ViewPost";
+import ViewLogs from "./pages/ViewLogs";
 import "./auth/create-admin";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, getDocs, updateDoc,doc} from "firebase/firestore";
@@ -299,6 +300,7 @@ function App() {
                 element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}
               />
               <Route path="/view" element={<ViewPost />} />
+              <Route path="/viewLogs" element={<ViewLogs />} />
               {isAdmin ? (
                 <>
                   <Route
