@@ -7,6 +7,7 @@ import {
   where,
 } from "firebase/firestore";
 
+
 async function Logger({ eventType, remarks = null }) {
   const postCollectionUser = collection(db, process.env.REACT_APP_ADMIN_USERS);
 

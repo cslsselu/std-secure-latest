@@ -13,7 +13,13 @@ import { useNavigate } from "react-router-dom";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useTimer } from 'react-timer-hook';
 import { FaMagnifyingGlass } from "react-icons/fa6";
+<<<<<<< HEAD
 import Logger from './Logger'
+=======
+import Logger from './Logger';
+
+
+>>>>>>> 018e2f160371c5cc307b6bcfe10ef4485dd85c59
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -21,7 +27,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 
 function ViewPost() {
-  const aceessTimer = 1000 * 10; // 5 sec
+  const aceessTimer = 1000 *4; // 5 sec
   const postId = sessionStorage.getItem("postId");
   const [documentLoaded, setDocumentLoaded] = useState(false);
 
@@ -146,10 +152,10 @@ function ViewPost() {
       alert("Incorrect password. Access denied.");
     }
   };
-  const onDocumentLoadSuccess = ({ numPages, link }) => {
+  const onDocumentLoadSuccess = ({ numPages, title }) => {
     if (!documentLoaded) {
      // alert(numPages);
-      Logger({ eventType: 'view post', remarks: link });
+      Logger({ eventType: 'view post', remarks: title });
       setNumPages(numPages);
       setDocumentLoaded(true);
     }
@@ -245,7 +251,8 @@ function ViewPost() {
         
                     <div
                       className="postTextContainer"
-                      style={{ height: "80%",display:'flex', alignContent:'center', justifyContent:'center'}}
+                      style={{ height: "auto",display:'flex', alignContent:'center', justifyContent:'center',  padding:'20px',
+                      marginTop:'50px'}}
                       onContextMenu={(e) => e.preventDefault()}
                     >
                       {isTimeUp ? (
@@ -261,15 +268,24 @@ function ViewPost() {
                       file={{
                         url: post.postText,
                       }}
-                      onLoadSuccess={onDocumentLoadSuccess}
+                  
+                     onLoadSuccess={({ numPages }) => onDocumentLoadSuccess({ numPages, title: `${post.title}` })}
+                      
                       style={{
                         display: "flex",
                         justifyContent: "center",
                         position: "relative",
+                       
+                        height: "100%",
+                        width: "80%",
+                        margin: "0 auto"
+                    
                       }}
                     >
                     {console.log("here is what i need",post.postText)}
-                      <Page pageNumber={pageNumber}  renderAnnotationLayer={false} renderTextLayer={false} />
+                    {[...Array(numPages).keys()].map((pageIndex) => (
+    <Page key={`page_${pageIndex + 1}`} pageNumber={pageIndex + 1} renderAnnotationLayer={false} renderTextLayer={false} />
+  ))}
                       <div
                         style={{
                           position: "absolute",
