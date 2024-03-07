@@ -1,20 +1,15 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { db } from '../firebase';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
-import { Button, Table } from 'react-bootstrap';
-import { Document, pdfjs } from 'react-pdf';
-
-
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase'; 
+import { collection, getDocs } from 'firebase/firestore';
+import { Button, Table, FormControl } from 'react-bootstrap';
 
 const PdfList = () => {
   const [pdfs, setPdfs] = useState([]);
-  const [selectedPdf, setSelectedPdf] = useState(null);
-  const [pages, setNumPages] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
     const fetchPdfs = async () => {
       try {
-        // Firebase Firestore query
         const pdfsCollection = collection(db, 'pdfs');
         const pdfData = await getDocs(pdfsCollection);
         const pdfsArray = pdfData.docs.map((doc) => ({
@@ -25,44 +20,44 @@ const PdfList = () => {
         setPdfs(pdfsArray);
       } catch (error) {
         console.error('Error fetching PDFs:', error);
-
       }
     };
     fetchPdfs();
-  }, [db]);
-  const handleClick = async (pdfId) => {
-    try{
-    const selectedPdf= pdfs.find((pdf)=>pdf.id === pdfId)
-    const postCollection = collection(db, 'posts')
-    const querySnapShot = await getDocs(postCollection)
-    const existingPost = querySnapShot.docs.find(data =>data.data().articleId === selectedPdf.id)
-    if(existingPost){
-      sessionStorage.setItem('postId', existingPost.id)
-      window.open('/view','_blank')
-    }
-    else{
-    const newPostRef = await addDoc(postCollection,{
-      title:selectedPdf.title,
-      postText: selectedPdf.url,
-      password:'',
-      articleId:selectedPdf.id
+  }, []); 
 
-    })
-    sessionStorage.setItem('postId', newPostRef.id)
-    window.open('/view', '_blank')
-  }
-}
-  catch(e){
-    console.log("Error",e)
-  }
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value.toLowerCase());
   };
-  
 
+  const filteredPdfs = pdfs.filter(pdf => pdf.title.toLowerCase().includes(searchQuery));
+
+  const handleClick = async (pdfId) => {
+    try {
+     
+    } catch (e) {
+      console.log("Error", e);
+    }
+  };
 
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>PDF Lists</h2>
-      <Table>
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+        <FormControl 
+          type="text" 
+          placeholder="Search PDFs..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{ width: '200px', marginRight: '10px', borderRadius: '20px' }} 
+        />
+        <Button 
+          variant="secondary" 
+          style={{ fontSize: '14px', padding: '6px 12px' }} 
+        >
+          <i className="bi bi-search"></i>
+        </Button>
+      </div>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
@@ -72,7 +67,7 @@ const PdfList = () => {
           </tr>
         </thead>
         <tbody>
-          {pdfs.map((pdf, index) => (
+          {filteredPdfs.map((pdf, index) => (
             <tr key={pdf.id}>
               <td>{index + 1}</td>
               <td>{pdf.title}</td>
@@ -80,9 +75,9 @@ const PdfList = () => {
               <td>
                 <Button
                   style={{ fontSize: '8px' }}
-                 onClick={()=>{
-                  handleClick(pdf.id)
-                 }}
+                  onClick={() => {
+                    handleClick(pdf.id);
+                  }}
                 >
                   View
                 </Button>

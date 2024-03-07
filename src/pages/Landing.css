@@ -1,0 +1,65 @@
+.landing-container {
+    font-family: "Arial", sans-serif;
+    color: #333;
+  }
+  .about-section {
+    margin: 30px 0;
+  }
+  h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  
+  .carousel {
+    margin-bottom: 20px;
+  }
+  
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+  }
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  h2.notice {
+    color: red;
+  }
+  .notice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align items to the right */
+    margin-right: 150px; 
+
+  }
+  
+  .notice {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    margin-bottom: 0; /* Remove default bottom margin for paragraphs */
+  }
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  

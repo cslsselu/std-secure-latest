@@ -9,26 +9,40 @@ import DrMinh from "../assests/Dr.Minh.png";
 import Aone from "../assests/aone.png";
 import Aakash from "../assests/aakash.png";
 import Satyam from "../assests/satyam.png";
+
 function TeamCard({ name, image, description }) {
   const [text, setText] = useState(false);
+
   const viewText = () => {
     setText(!text);
   };
+
   const shortDescription = description.slice(0, 60);
   const displayDescription = text ? description : shortDescription;
+
   return (
     <Card
       style={{
         width: "18rem",
         marginLeft: "10px",
         marginTop: "20px",
-        marginBottom: "10px"
+        marginBottom: "10px",
+        border: "2px solid #000",
+        borderRadius: "10px",
+        overflow: "hidden",
+        backgroundColor: "#f0f0f0", // Add background color here
       }}
-      border="secondary"
     >
-      <Card.Header>
+      <Card.Header style={{ padding: 0 }}>
         <div
-          style={{ position: "relative", width: "100%", paddingBottom: "100%" }}
+          style={{
+            position: "relative",
+            width: "100%",
+            paddingBottom: "100%",
+            border: "2px solid #000",
+            borderRadius: "12px",
+            overflow: "hidden",
+          }}
         >
           <img
             src={image}
@@ -36,14 +50,12 @@ function TeamCard({ name, image, description }) {
               position: "absolute",
               width: "100%",
               height: "100%",
-              objectFit: "contain",
+              objectFit: "cover",
             }}
-            className="rounded-circle"
           />
         </div>
       </Card.Header>
       <Card.Body>
-        <Image />
         <Card.Title>{name}</Card.Title>
         <Card.Text>
           {displayDescription}
@@ -60,6 +72,7 @@ function TeamCard({ name, image, description }) {
     </Card>
   );
 }
+
 const Team = () => {
   return (
     <>
@@ -110,12 +123,8 @@ const Team = () => {
           />
         </Col>
       </Row>
-      <TeamCard 
-      name="Anish Malla"
-      description="Backend Developer"
-      
-      />
     </>
   );
 };
+
 export default Team;
