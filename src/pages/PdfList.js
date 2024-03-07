@@ -31,12 +31,8 @@ const PdfList = () => {
 
   const filteredPdfs = pdfs.filter(pdf => pdf.title.toLowerCase().includes(searchQuery));
 
-  const handleClick = async (pdfId) => {
-    try {
-     
-    } catch (e) {
-      console.log("Error", e);
-    }
+  const handleClick = (pdfUrl) => {
+    window.open(pdfUrl, '_blank');
   };
 
   return (
@@ -76,7 +72,7 @@ const PdfList = () => {
                 <Button
                   style={{ fontSize: '8px' }}
                   onClick={() => {
-                    handleClick(pdf.id);
+                    handleClick(pdf.url);
                   }}
                 >
                   View
