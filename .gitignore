@@ -32,3 +32,4 @@ firestore.rules
 .firebaserc
 .firebaserc
 .firebaserc
+.storage.rules
