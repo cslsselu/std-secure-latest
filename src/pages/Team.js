@@ -10,6 +10,7 @@ import Aone from "../assests/aone.png";
 import Aakash from "../assests/aakash.png";
 import Satyam from "../assests/satyam.png";
 import Anish from "../assests/anish2.png";
+
 function TeamCard({ name, image, description }) {
   const [text, setText] = useState(false);
   const viewText = () => {
