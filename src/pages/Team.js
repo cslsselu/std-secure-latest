@@ -9,7 +9,7 @@ import DrMinh from "../assests/Dr.Minh.png";
 import Aone from "../assests/aone.png";
 import Aakash from "../assests/aakash.png";
 import Satyam from "../assests/satyam.png";
-import Anish from "../assests/anish2.png"
+import Anish from "../assests/anish2.png";
 function TeamCard({ name, image, description }) {
   const [text, setText] = useState(false);
   const viewText = () => {
@@ -23,7 +23,7 @@ function TeamCard({ name, image, description }) {
         width: "18rem",
         marginLeft: "10px",
         marginTop: "20px",
-        marginBottom: "10px"
+        marginBottom: "10px",
       }}
       border="secondary"
     >
@@ -113,11 +113,10 @@ const Team = () => {
           />
         </Col>
       </Row>
-      <TeamCard 
-      name="Anish Malla"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      image={Anish}
-      
+      <TeamCard
+        name="Anish Malla"
+        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        image={Anish}
       />
     </>
   );
