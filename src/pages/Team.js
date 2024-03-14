@@ -82,6 +82,15 @@ const Team = () => {
           />
         </Col>
         <Col>
+        <TeamCard
+        name="Anish Malla"
+        description="A technology enthusiast pursuing a Master's in Computer Science, I'm driven by a passion for exploring cutting-edge advancements in AI, machine learning, and software development. With a strong foundation in coding and data analysis, coupled with a curiosity for innovation, I'm committed to making impactful contributions to the tech industry"
+        image={Anish}
+      />
+        </Col>
+      </Row>
+      <Row>
+      <Col>
           <TeamCard
             name="Subin Bista"
             description="I am Sophomore Cs major at Southeastern Louisiana University. I am enthusiastic about learning new technology and currently, I am working as a Research Assistant and Math Tutor at the Southeastern Louisiana University. I am known for hard working and always longing to expand my knowledge.
@@ -90,8 +99,6 @@ const Team = () => {
             image={Subin}
           />
         </Col>
-      </Row>
-      <Row>
         <Col>
           <TeamCard
             name="Aakash Poudel"
@@ -114,11 +121,6 @@ const Team = () => {
           />
         </Col>
       </Row>
-      <TeamCard
-        name="Anish Malla"
-        description="A technology enthusiast pursuing a Master's in Computer Science, I'm driven by a passion for exploring cutting-edge advancements in AI, machine learning, and software development. With a strong foundation in coding and data analysis, coupled with a curiosity for innovation, I'm committed to making impactful contributions to the tech industry"
-        image={Anish}
-      />
     </>
   );
 };
