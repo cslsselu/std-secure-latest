@@ -21,6 +21,9 @@ import PdfList from "./pages/PdfList";
 import Logger from '../src/pages/Logger'
 import { useLocation } from "react-router-dom";
 
+import { pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 function App() {
   const postId = sessionStorage.getItem("postId") ;
   // const aceessTimer = 1000*5; // 20 sec
