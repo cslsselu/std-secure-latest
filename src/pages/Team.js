@@ -70,7 +70,7 @@ const Team = () => {
         <Col>
           <TeamCard
             name="Dr. Minh Huynh"
-            description="Dr Minh Huynh is a professor and the Director of the Project."
+            description="Dr. Minh Huynh is a professor of MIS at Southeastern Louisiana University.  He has taught Management of Information Systems since 2003.  His research interest is in open source software, web design, development of SRD (Store-Retrieve-Display) apps, and recently Generative AI tools and applications.  He enjoys working with students on learning new development tools and using them to develop useful apps."
             image={DrMinh}
           />
         </Col>
