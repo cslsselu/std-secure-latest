@@ -19,6 +19,7 @@ import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import PdfList from "./pages/PdfList";
 import Logger from '../src/pages/Logger'
+import PdfViewerPage from "./pages/PdfViewerPage";
 import { useLocation } from "react-router-dom";
 
 import { pdfjs } from 'react-pdf';
@@ -292,7 +293,7 @@ function App() {
         <>
           {isApproved ? (
             <Routes>
-              <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+              <Route path="/login" element={<PdfViewerPage setIsAuth={setIsAuth} />} />
               <Route path="/signup" element={<SignUp />} />
 
               <Route path="/" element={<Landing isAuth={isAuth} />} />
@@ -340,6 +341,7 @@ function App() {
                 }
               />
                <Route path = '/pdfList' element={<><PdfList isAuth={isAuth}/> <Unverified/> </>}/>
+               {/* <Route path="/pdfviewerpage" element={<><PdfList isAuth={isAuth}/> <Unverified/> </>} /> */}
               <Route
                 path="/posts"
                 element={
@@ -360,6 +362,7 @@ function App() {
           <Route path="/team" element={<Team isAuth={isAuth} />} />
           <Route path='/pdfList' element={<PdfList isAuth={isAuth}/>}/>
           <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+          <Route path='/PdfViewerPage' element={<PdfViewerPage isAuth={isAuth}/> } />
         </Routes>
       )}
       <Footer/>

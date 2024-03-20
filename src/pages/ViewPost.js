@@ -16,10 +16,10 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logger from './Logger';
 
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url
-).toString();
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   "pdfjs-dist/build/pdf.worker.min.js",
+//   import.meta.url
+// ).toString();
 
 
 function ViewPost() {
