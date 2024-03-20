@@ -82,10 +82,11 @@ const PdfList = () => {
               <td>{index + 1}</td>
               <td>{pdf.title}</td>
               <td>{pdf.Author || ''}</td>
+              <td>{pdf.access}</td>
               <td>
                 <Button
                   style={{ fontSize: '12px' }}
-                  onClick={() => window.open(pdf.url, '_blank')}
+                  onClick={() => viewpdf(pdf.url, pdf.access)}
                 >
                   View
                 </Button>
