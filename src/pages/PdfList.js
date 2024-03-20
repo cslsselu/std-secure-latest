@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const PdfList = () => {
   const [pdfs, setPdfs] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [newSearch, setNewSearch] = useState('');
 
   useEffect(() => {
     const fetchPdfs = async () => {
@@ -17,12 +17,12 @@ const PdfList = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        console.log('Fetched PDFs:', pdfsArray);
         setPdfs(pdfsArray);
       } catch (error) {
         console.error('Error fetching PDFs:', error);
       }
     };
+
     fetchPdfs();
   }, []);
 
@@ -41,9 +41,18 @@ const PdfList = () => {
 };
 
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value.toLowerCase());
+  const handleSearch = (event) => {
+    const search = event.target.value;
+    setNewSearch(search);
   };
+
+  // Filtering PDFs based on search term
+  const showSearchResults = newSearch
+    ? pdfs.filter((pdf) =>
+        pdf.title.toUpperCase().includes(newSearch.toUpperCase()) ||
+        (pdf.Author && pdf.Author.toUpperCase().includes(newSearch.toUpperCase()))
+      )
+    : pdfs;
 
   return (
     <div>
@@ -52,42 +61,34 @@ const PdfList = () => {
         <FormControl
           type="text"
           placeholder="Search PDFs..."
-          value={searchQuery}
-          onChange={handleSearchChange}
+          value={newSearch}
+          onChange={handleSearch}
           style={{ width: '200px', marginRight: '10px', borderRadius: '20px' }}
         />
-        <Button
-          variant="secondary"
-          style={{ fontSize: '14px', padding: '6px 12px' }}
-        >
-          <i className="bi bi-search"></i>
-        </Button>
       </div>
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>#</th>
-            <th>Article</th>
+            <th>Title</th>
             <th>Author</th>
             <th>Access</th>
             <th>View</th>
           </tr>
         </thead>
         <tbody>
-          {pdfs.filter(pdf => pdf.title.toLowerCase().includes(searchQuery)).map((pdf, index) => (
+          {showSearchResults.map((pdf, index) => (
             <tr key={pdf.id}>
               <td>{index + 1}</td>
               <td>{pdf.title}</td>
-              <td>{pdf.Author}</td>
-              <td>{pdf.access}</td>
+              <td>{pdf.Author || ''}</td>
               <td>
-                
-                  <Button
-                    style={{ fontSize: '8px' }}
-                     onClick={() => viewpdf(pdf.url, pdf.access)}
-                  >
-                    View
-                  </Button>
+                <Button
+                  style={{ fontSize: '12px' }}
+                  onClick={() => window.open(pdf.url, '_blank')}
+                >
+                  View
+                </Button>
               </td>
             </tr>
           ))}
