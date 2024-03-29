@@ -86,7 +86,7 @@ function App() {
       {
         isViewPost ? null :(
           <footer className="footer">
-          <p>Copyright © Std Secure 2023</p>
+          <p>Copyright © SRD 2024</p>
         </footer>
         )
       }

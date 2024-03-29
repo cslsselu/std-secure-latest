@@ -14,7 +14,7 @@ function Landing({ isAuth }) {
   const [notices, setNotices] = useState();
   useEffect(() => {
     if (!isAuth) {
-      toast.warning("Login to see the announcements!!!", {
+      toast.warning("Logged out Successfully!!!", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 2000,
         hideProgressBar: true,
