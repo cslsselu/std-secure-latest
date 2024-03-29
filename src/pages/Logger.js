@@ -15,10 +15,12 @@ async function Logger({ eventType, remarks = null }) {
     query(postCollectionUser, where("email", "==", auth.currentUser.email))
   );
 
+  const isAuth = JSON.parse(localStorage.getItem("isAuth"));
+
   const userDoc = querySnapshot.docs[0];
   const isAdmin = await userDoc.data().isAdmin;
   console.log(isAdmin);
-  if (isAdmin) {
+  if (isAdmin || !isAuth) {
     return;
   }
 

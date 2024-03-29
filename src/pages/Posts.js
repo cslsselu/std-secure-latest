@@ -32,11 +32,12 @@ function Posts({ isAuth, isAdmin }) {
   };
 
   useEffect(() => {
-    if (!isAuth) {
-      navigate("/login");
-    } else {
-      getPosts();
-    }
+    getPosts();
+    // if (!isAuth) {
+    //   navigate("/login");
+    // } else {
+    //   getPosts();
+    // }
   }, [setPostLists]);
   if (loading) {
     return <div> </div>;

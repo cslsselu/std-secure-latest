@@ -246,13 +246,12 @@ function App() {
 
               </Link>
 
+              <Link to="/posts" className="nav-link"> Featured Article </Link>
+
               {isAuth ? (
                 <>
                   {isApproved && (
                     <>
-                      <Link to="/posts" className="nav-link">
-                        Featured Article
-                      </Link>
                       {isAdmin && (
                         <>
                           <Link to="/createpost" className="nav-link">
@@ -363,6 +362,8 @@ function App() {
           <Route path='/pdfList' element={<PdfList isAuth={isAuth}/>}/>
           <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
           <Route path='/PdfViewerPage' element={<PdfViewerPage isAuth={isAuth}/> } />
+          <Route path="/posts" element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}/>
+          <Route path="/view" element={<ViewPost />} />
         </Routes>
       )}
       <Footer/>
