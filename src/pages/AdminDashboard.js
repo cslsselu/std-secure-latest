@@ -36,6 +36,12 @@ function Admin() {
     setisLoading(false);
   };
 
+  async function deletePost(id) {
+    const postDoc = doc(db, process.env.REACT_APP_ADMIN_DATABSE, id);
+    await deleteDoc(postDoc);
+    getPosts();
+  }
+
   const handleViewLogs = (user) => {
     sessionStorage.setItem("userEmail", user.email);
     window.open("/viewLogs", "_blank");
@@ -53,6 +59,12 @@ function Admin() {
   const handleOptionChange = (event) => {
     setSelectOption(event.target.value);
   };
+
+    async function deletePost(id) {
+    const postDoc = doc(db, process.env.REACT_APP_ADMIN_DATABSE, id);
+    await deleteDoc(postDoc);
+    getPosts();
+  }
 
   const toggleApprove = async (user) => {
     try {

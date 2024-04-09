@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import {
-  FaPencil,
-  FaTrashCan,
-  FaUserTie,
-  FaMagnifyingGlass,
-  FaThumbsUp,
-  FaRegThumbsUp,
-} from "react-icons/fa6";
+import { FaPencil, FaTrashCan, FaUserTie, FaMagnifyingGlass, FaThumbsUp, FaRegThumbsUp } from "react-icons/fa6";
 import Linkify from "react-linkify";
 import { Link } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
 import Countdown from "react-countdown";
-import CreatePost from "../pages/CreateEditPost";
-import App from "../App"
+import { Document, Page, pdfjs } from "react-pdf";
+import "./Card.css";
+// import Logger from './Logger';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
 
 export default function Card({
   postLists,
@@ -26,21 +25,20 @@ export default function Card({
   const [deleteId, setDeleteId] = useState("");
   const [search, setSearch] = useState("");
   const [active, setIsActive] = useState(false);
-
-  const updateActive =()=>{
-  
-    //App.updateIsActive();
-    
-  }
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [numPages, setNumPages] = useState(null);
 
   const uid = localStorage.getItem("uid") || "";
 
-  const openPost = (postId) => {
-    sessionStorage.setItem("postId", postId);
-    window.open("/view", "_blank");
+  const openPost = (postId, postUrl) => {
+    setPdfUrl(postUrl);
+    setShowPdfModal(true);
   };
 
-
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
   const onChangeSearch = (e) => {
     const searchValue = e.target.value;
     setSearch(searchValue);
@@ -55,19 +53,17 @@ export default function Card({
     if (searchValue === "") {
       getPosts();
     }
-    
   };
 
   const handleDelete = (props) => {
     onDelete(props);
     setShowDeleteModal(false);
   };
+
   const handleLikeClick = (postId) => {
     const updatedPostLists = postLists.map((post) =>
       post.id === postId ? { ...post, liked: !post.liked } : post
     );
-
-    // Update the state with the new postLists data
     setPostLists(updatedPostLists);
   };
 
@@ -86,11 +82,6 @@ export default function Card({
             &nbsp;{minutes}:&nbsp;
             {seconds} &nbsp;&nbsp;
           </div>
-
-          {/* <div className="countdown-units">
-          {hours === 1 ? "hour" : "hours"} {minutes === 1 ? "minute" : "minutes"}{" "}
-          {seconds === 1 ? "second" : "seconds"}
-        </div> */}
         </div>
       );
     }
@@ -134,11 +125,7 @@ export default function Card({
                     </span>
                   </div>
                   <div className="postTopRight">
-                    {/* <div className="hover-message">
-                        Text message will be sent to your contacts
-                      </div> */}
                     <Countdown date={post.expiryDate} renderer={renderer} />
-
                     {isAuth && (post.author.id === uid || isAdmin) && (
                       <div>
                         <button
@@ -188,7 +175,6 @@ export default function Card({
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {/* Open Post to See the Link */}
                         </a>
                       )}
                     >
@@ -199,9 +185,7 @@ export default function Card({
                     <button
                       type="button"
                       className="btn btn-outline-info"
-                      onClick={() => {
-                        openPost([post.id]); 
-                        updateActive();}}
+                      onClick={() => openPost(post.id, post.postText)}
                     >
                       Open Post
                     </button>
@@ -325,7 +309,32 @@ export default function Card({
           </Button>
         </Modal.Footer>
       </Modal>
- {/* { <CreatePost active={active}  /> } */}
+
+      <Modal show={showPdfModal} onHide={() => setShowPdfModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>PDF Viewer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Document
+            file={{
+              url: pdfUrl
+            }}
+
+            onLoadSuccess={onDocumentLoadSuccess}
+          >
+
+{[...Array(numPages).keys()].map((pageIndex) => (
+    <Page key={`page_${pageIndex + 1}`} pageNumber={pageIndex + 1} renderAnnotationLayer={false} renderTextLayer={false} />
+  ))}
+            
+          </Document>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPdfModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

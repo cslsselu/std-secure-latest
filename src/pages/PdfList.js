@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { Button, Table, FormControl } from 'react-bootstrap';
+import { Button, Table, FormControl, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { Document, Page, pdfjs } from "react-pdf";
+import "./pdfList.css";
 
 const PdfList = () => {
   const [pdfs, setPdfs] = useState([]);
   const [newSearch, setNewSearch] = useState('');
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [showPdfModalNormal, setshowPdfModalNormal] = useState(false);
+  
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [numPages, setNumPages] = useState(null);
+
 
   useEffect(() => {
     const fetchPdfs = async () => {
@@ -27,17 +35,44 @@ const PdfList = () => {
   }, []);
 
   
-  const viewpdf = (pdfUrl, access) => {
-    sessionStorage.setItem("url", pdfUrl);
+//   const viewpdf = (pdfUrl, access) => {
+//     sessionStorage.setItem("url", pdfUrl);
 
-    access = String(access).toLowerCase();
-    if (access === "restricted") {
-        window.open("/PdfViewerPage");
-    } else if (access === "unrestricted") {   
-        window.open(pdfUrl, '_blank');
-    } else {
-        console.error("Invalid access type provided.");
-    }
+//     access = String(access).toLowerCase();
+//     if (access === "restricted") {
+//         window.open("/PdfViewerPage");
+//     } else if (access === "unrestricted") {   
+//         window.open(pdfUrl, '_blank');
+//     } else {
+//         console.error("Invalid access type provided.");
+//     }
+// };
+
+
+const onDocumentLoadSuccess = ({ numPages }) => {
+  setNumPages(numPages);
+};
+const openPdfInNewTab = () => {
+  window.open(pdfUrl, '_blank');
+};
+
+const downloadPdf = () => {
+  window.open(pdfUrl + '?download=true', '_blank');
+};
+  
+const viewpdf = (pdfUrl, access) => {
+  sessionStorage.setItem("url", pdfUrl);
+
+  access = String(access).toLowerCase();
+  if (access === "restricted") {
+    setPdfUrl(pdfUrl);
+    setShowPdfModal(true);
+  } else if (access === "unrestricted") {   
+    setPdfUrl(pdfUrl);
+    setshowPdfModalNormal(true);
+  } else {
+      console.error("Invalid access type provided.");
+  }
 };
 
 
@@ -95,6 +130,42 @@ const PdfList = () => {
           ))}
         </tbody>
       </Table>
+
+      <Modal show={showPdfModal} onHide={() => setShowPdfModal(false)} className="custom-pdf-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>PDF Viewer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Document className="pdf-content"
+            file={{
+              url: pdfUrl
+            }}
+
+            onLoadSuccess={onDocumentLoadSuccess}
+          >
+
+{[...Array(numPages).keys()].map((pageIndex) => (
+    <Page key={`page_${pageIndex + 1}`} pageNumber={pageIndex + 1} renderAnnotationLayer={false} renderTextLayer={false} style={{ width: 1200}}/>
+  ))}
+            
+          </Document>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPdfModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
+      <Modal show={showPdfModalNormal} onHide={() => setshowPdfModalNormal(false)} dialogClassName="pdf-modal-dialog">
+      <Modal.Header closeButton>
+        {/* <Modal.Title>PDF Viewer</Modal.Title> */}
+      </Modal.Header>
+      <Modal.Body>
+      <iframe src={`${pdfUrl}#navpanes=0`} title="PDF Viewer" className="pdf-modal-iframe" />
+      </Modal.Body>
+    </Modal>
     </div>
   );
 };
