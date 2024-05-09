@@ -12,12 +12,7 @@ const PdfList = () => {
   const [showPdfModalNormal, setshowPdfModalNormal] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [numPages, setNumPages] = useState(null);
-  const selectedGroup = sessionStorage.getItem('selectedGroup');
   const selectedCategory = sessionStorage.getItem('selectedCategory');
-
-  // console.log("#########################Tester")
-  // console.log(selectedCategory)
-  // console.log(selectedGroup)
 
   useEffect(() => { 
     const fetchPdfs = async () => {
@@ -25,10 +20,7 @@ const PdfList = () => {
         const pdfsCollection = collection(db, 'pdfs');
         let querySnapshot;
 
-        if (selectedGroup) {
-          //alert("Group")
-          querySnapshot = await getDocs(query(pdfsCollection, where('group', '==', selectedGroup)));
-        } else if (selectedCategory) {
+         if (selectedCategory) {
           // alert(selectedCategory)
           querySnapshot = await getDocs(query(pdfsCollection, where('categories', 'array-contains', selectedCategory)));
         } else {
@@ -53,7 +45,7 @@ const PdfList = () => {
     };
 
     fetchPdfs();
-  }, [selectedGroup, selectedCategory]);
+  }, [selectedCategory]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);

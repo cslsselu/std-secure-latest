@@ -18,9 +18,12 @@ import Admin from "./pages/AdminDashboard";
 import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import PdfList from "./pages/PdfList";
+import CategoryPdfList from "./pages/categoryPdfList";
 import Logger from '../src/pages/Logger'
 import PdfViewerPage from "./pages/PdfViewerPage";
 import { useLocation } from "react-router-dom";
+import DropdownComponent from '../src/Dropdown';
+import CategoryDropdownComponent from '../src/CategoryDropdown';
 
 import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -55,6 +58,21 @@ function App() {
   //   console.log("SUBIN ROCKSSSS")
   // }
   
+
+  // const fetchGroups = async () => {
+  //   try {
+  //     const pdfsCollection = collection(db, 'pdfs');
+  //     const pdfData = await getDocs(pdfsCollection);
+  //     const pdfsArray = pdfData.docs.map((doc) => ({
+  //       id: doc.id,
+  //       group: doc.data().group,
+  //     }));
+  //     return pdfsArray;
+  //   } catch (error) {
+  //     console.error('Error fetching PDF groups:', error);
+  //     return [];
+  //   }
+  // };
 
   const Unauthorized = () => {
     toast.error("Unauthorized!!!", {
@@ -236,15 +254,26 @@ function App() {
               <Link to="/" className="nav-link" aria-current="page">
                 Home
               </Link>
-              <Link to='/team' className="nav-link" >
+              {/* <Link to='/team' className="nav-link" >
                Team
-              </Link>
-              <Link to='/pdfList' className="nav-link" >
+              </Link> */}
+{/* 
+              <Link className="nav-link">
+        <DropdownComponent />
+      </Link>
+
+      <Link className="nav-link">
+        <CategoryDropdownComponent />
+      </Link> */}
+
+      
+
+              {/* <Link to='/pdfList' className="nav-link" >
 
                Article List
 
 
-              </Link>
+              </Link> */}
 
               <Link to="/posts" className="nav-link"> Featured Article </Link>
 
@@ -264,6 +293,28 @@ function App() {
                       )}
                     </>
                   )}
+
+              <Link to='/team' className="nav-link" >
+               Team
+              </Link>
+
+              
+              <Link className="nav-link">
+        <DropdownComponent />
+      </Link>
+
+      <Link className="nav-link">
+        <CategoryDropdownComponent />
+      </Link>
+
+                <Link to='/pdfList' className="nav-link" >
+
+                Article List
+
+
+                </Link>
+
+                
                   <Link
                     className="nav-link"
                     onClick={signUserOut}
@@ -271,6 +322,8 @@ function App() {
                   >
                     Log Out
                   </Link>
+
+                  
                 </>
               ) : (
                 <Link to="/login" className="nav-link ">
@@ -298,6 +351,7 @@ function App() {
               <Route path="/" element={<Landing isAuth={isAuth} />} />
               <Route path="/team" element={<Team isAuth={isAuth}/>}/>
               <Route path = '/pdfList' element={<PdfList isAuth={isAuth}/>}/>
+              <Route path = '/categorypdfList' element={<CategoryPdfList isAuth={isAuth}/>}/>
               <Route
                 path="/posts"
                 element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}
@@ -360,6 +414,7 @@ function App() {
           <Route path="/" element={<Landing isAuth={isAuth} />} />
           <Route path="/team" element={<Team isAuth={isAuth} />} />
           <Route path='/pdfList' element={<PdfList isAuth={isAuth}/>}/>
+          <Route path = '/categorypdfList' element={<CategoryPdfList isAuth={isAuth}/>}/>
           <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
           <Route path='/PdfViewerPage' element={<PdfViewerPage isAuth={isAuth}/> } />
           <Route path="/posts" element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}/>
