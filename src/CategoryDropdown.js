@@ -50,6 +50,7 @@ const CategoryDropdownComponent = () => {
   const handleDropdownItemClick = (category) => {
     // Set the selected group in session storage
     sessionStorage.setItem('selectedCategory', category);
+    sessionStorage.setItem('type', 'category');
     // alert(category)
     
     // Navigate to pdflist.js

@@ -14,6 +14,7 @@ const PdfList = () => {
   const [numPages, setNumPages] = useState(null);
   const selectedGroup = sessionStorage.getItem('selectedGroup');
   const selectedCategory = sessionStorage.getItem('selectedCategory');
+  const type = sessionStorage.getItem('type');
 
   // console.log("#########################Tester")
   // console.log(selectedCategory)
@@ -24,17 +25,20 @@ const PdfList = () => {
       try {
         const pdfsCollection = collection(db, 'pdfs');
         let querySnapshot;
+        alert(type)
 
-        if (selectedGroup) {
+        if (type && type === 'group') {
           //alert("Group")
           querySnapshot = await getDocs(query(pdfsCollection, where('group', '==', selectedGroup)));
-        } else if (selectedCategory) {
+        } else if (type && type === 'category') {
           // alert(selectedCategory)
           querySnapshot = await getDocs(query(pdfsCollection, where('categories', 'array-contains', selectedCategory)));
         } else {
           // If neither selectedGroup nor selectedCategory is present, fetch all PDFs
           querySnapshot = await getDocs(pdfsCollection);
         }
+
+      
 
         const pdfsArray = [];
 
@@ -53,6 +57,9 @@ const PdfList = () => {
     };
 
     fetchPdfs();
+
+
+
   }, [selectedGroup, selectedCategory]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -73,6 +80,7 @@ const PdfList = () => {
       console.error("Invalid access type provided.");
     }
   };
+
 
   const handleSearch = (event) => {
     const search = event.target.value;

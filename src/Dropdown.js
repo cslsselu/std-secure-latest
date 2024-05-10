@@ -43,6 +43,7 @@ const DropdownComponent = () => {
   const handleDropdownItemClick = (group) => {
     // Set the selected group in session storage
     sessionStorage.setItem('selectedGroup', group);
+    sessionStorage.setItem('type', 'group');
     
     // Navigate to pdflist.js
     window.location.href = 'pdfList'; // Assuming pdflist.js is a valid route in your application

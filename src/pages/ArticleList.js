@@ -12,22 +12,22 @@ const PdfList = () => {
   const [showPdfModalNormal, setshowPdfModalNormal] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [numPages, setNumPages] = useState(null);
+  const selectedGroup = sessionStorage.getItem('selectedGroup');
   const selectedCategory = sessionStorage.getItem('selectedCategory');
-  
+  const type = sessionStorage.getItem('type');
+
+  // console.log("#########################Tester")
+  // console.log(selectedCategory)
+  // console.log(selectedGroup)
 
   useEffect(() => { 
     const fetchPdfs = async () => {
       try {
         const pdfsCollection = collection(db, 'pdfs');
         let querySnapshot;
+        alert(type)
 
-         if (selectedCategory) {
-          // alert(selectedCategory)
-          querySnapshot = await getDocs(query(pdfsCollection, where('categories', 'array-contains', selectedCategory)));
-        } else {
-          // If neither selectedGroup nor selectedCategory is present, fetch all PDFs
-          querySnapshot = await getDocs(pdfsCollection);
-        }
+        querySnapshot = await getDocs(pdfsCollection);
 
         const pdfsArray = [];
 
@@ -46,7 +46,10 @@ const PdfList = () => {
     };
 
     fetchPdfs();
-  }, [selectedCategory]);
+
+
+
+  }, [selectedGroup, selectedCategory]);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -66,6 +69,7 @@ const PdfList = () => {
       console.error("Invalid access type provided.");
     }
   };
+
 
   const handleSearch = (event) => {
     const search = event.target.value;

@@ -18,6 +18,7 @@ import Admin from "./pages/AdminDashboard";
 import SignUp from "./pages/SignUp";
 import Team from "./pages/Team";
 import PdfList from "./pages/PdfList";
+import ArticleList from "./pages/ArticleList";
 import CategoryPdfList from "./pages/categoryPdfList";
 import Logger from '../src/pages/Logger'
 import PdfViewerPage from "./pages/PdfViewerPage";
@@ -42,6 +43,7 @@ function App() {
   const uid = localStorage.getItem("uid") || "";
   const [loading, setLoading] = useState(true); // Add loading state
   const [isCollapsed, setIsCollapsed] = useState(true);
+
   // const[active, setActive] = useState(false);
   // const postCollectionRef = collection(db, process.env.REACT_APP_ADMIN_DATABSE);
   // const postRef = doc(postCollectionRef, postId);
@@ -305,9 +307,11 @@ function App() {
 
       <Link className="nav-link">
         <CategoryDropdownComponent />
+
+        
       </Link>
 
-                <Link to='/pdfList' className="nav-link" >
+                <Link to='/articleList' className="nav-link" >
 
                 Article List
 
@@ -351,6 +355,7 @@ function App() {
               <Route path="/" element={<Landing isAuth={isAuth} />} />
               <Route path="/team" element={<Team isAuth={isAuth}/>}/>
               <Route path = '/pdfList' element={<PdfList isAuth={isAuth}/>}/>
+              <Route path = '/articleList' element={<ArticleList isAuth={isAuth}/>}/>
               <Route path = '/categorypdfList' element={<CategoryPdfList isAuth={isAuth}/>}/>
               <Route
                 path="/posts"
