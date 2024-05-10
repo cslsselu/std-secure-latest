@@ -25,7 +25,7 @@ const PdfList = () => {
       try {
         const pdfsCollection = collection(db, 'pdfs');
         let querySnapshot;
-        alert(type)
+        // alert(type)
 
         if (type && type === 'group') {
           //alert("Group")
