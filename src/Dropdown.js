@@ -28,7 +28,8 @@ const DropdownComponent = () => {
       });
 
       // Convert the Set back to an array
-      const uniqueGroupsArray = [...uniqueGroups].map((group, index) => ({
+      const uniqueGroupsArray = [...uniqueGroups].sort((a, b) => a.localeCompare(b))
+      .map((group, index) => ({
         id: index, // You can set any unique identifier here
         group: group,
       }));

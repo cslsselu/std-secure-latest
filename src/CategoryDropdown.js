@@ -35,8 +35,9 @@ const CategoryDropdownComponent = () => {
       // console.log(uniqueCategories)
 
       // Convert the Set back to an array
-      const uniqueCategoriesArray = [...uniqueCategories].map((categories, index) => ({
-        id: index, // You can set any unique identifier here
+      const uniqueCategoriesArray = [...uniqueCategories].sort((a, b) => a.localeCompare(b))
+      .map((categories, index) => ({
+        id: index,
         categories: categories,
       }));
 
@@ -54,7 +55,7 @@ const CategoryDropdownComponent = () => {
     // alert(category)
     
     // Navigate to pdflist.js
-    window.location.href = 'categorypdfList'; // Assuming pdflist.js is a valid route in your application
+    window.location.href = 'categorypdfList'; 
   };
 
   return (
