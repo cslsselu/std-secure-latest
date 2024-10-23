@@ -9,8 +9,6 @@ const CategoryDropdownComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       const categories = await fetchCategories();
-      console.log("Returned Categories !!!")
-      console.log(categories)
       setPdfsArray(categories);
     };
     fetchData();

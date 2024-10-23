@@ -39,7 +39,7 @@ function Login({ setIsAuth }) {
         const id = auth.currentUser.uid;
         const date = serverTimestamp();
         const uid = auth.currentUser.uid;
-        localStorage.setItem("uid", uid);
+        localStorage.setItem("email", email);
 
         const querySnapshot = await getDocs(
           query(postCollectionRef, where("email", "==", email))
@@ -47,14 +47,12 @@ function Login({ setIsAuth }) {
         if (querySnapshot.size > 0) {
           const docRef = doc(postCollectionRef, querySnapshot.docs[0].id);
           await updateDoc(docRef, {
-            id,
             date,
             name,
             email,
           });
         } else {
           await addDoc(postCollectionRef, {
-            id,
             date,
             name,
             email,

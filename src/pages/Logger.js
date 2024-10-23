@@ -9,7 +9,9 @@ import {
 
 
 async function Logger({ eventType, remarks = null }) {
+  if(auth.currentUser){
   const postCollectionUser = collection(db, process.env.REACT_APP_ADMIN_USERS);
+
 
   const querySnapshot = await getDocs(
     query(postCollectionUser, where("email", "==", auth.currentUser.email))
@@ -18,11 +20,13 @@ async function Logger({ eventType, remarks = null }) {
   const isAuth = JSON.parse(localStorage.getItem("isAuth"));
 
   const userDoc = querySnapshot.docs[0];
+  if(userDoc && userDoc.data){
   const isAdmin = await userDoc.data().isAdmin;
   console.log(isAdmin);
   if (isAdmin || !isAuth) {
     return;
   }
+}
 
   const postCollectionRef = collection(db, process.env.REACT_APP_ADMIN_LOG);
 
@@ -39,6 +43,7 @@ async function Logger({ eventType, remarks = null }) {
   } catch (error) {
     console.error(`Error inserting value: ${error}`);
   }
+}
 }
 
 export default Logger;

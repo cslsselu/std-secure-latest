@@ -10,6 +10,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase'; 
+
 dotenv.config();
 const adminEmail =
   process.env.REACT_APP_ADMIN_EMAIL || "admin_secure@gmail.com";
@@ -38,7 +41,9 @@ const checkAdminEmail = async () => {
         // console.log("User with email " + adminEmail + " is already an admin");
       }
     } else {
+      //localStorage.setItem("isAuth", false);
       await addDoc(postCollectionRef, {
+        date: new Date().toLocaleString(),
         id: 1,
         name: "Admin",
         email: adminEmail,
@@ -46,6 +51,7 @@ const checkAdminEmail = async () => {
         isApproved: true,
         
       });
+      localStorage.clear();
       // console.log("Admin with email " + adminEmail + " created successfully");
     }
   }

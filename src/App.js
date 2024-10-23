@@ -30,19 +30,54 @@ import { pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 function App() {
-  const postId = sessionStorage.getItem("postId") ;
+  const postId = sessionStorage.getItem("postId") ; 
   // const aceessTimer = 1000*5; // 20 sec
   const navigate = useNavigate();
-  const AUTO_LOGOUT_TIME = 60 * 30 * 1000; // 30 min
-  const [isAuth, setIsAuth] = useState(() => {
-    const storedAuth = localStorage.getItem("isAuth");
-    return storedAuth ? JSON.parse(storedAuth) : false;
-  });
+  const AUTO_LOGOUT_TIME = 60 * 30 * 1000;
+  
+  const [isAuth, setIsAuth] = useState(false);// 30 min
+  // const [isAuth, setIsAuth] = useState(() => {
+  //   const storedAuth = localStorage.getItem("isAuth");
+  //   return storedAuth ? JSON.parse(storedAuth) : false;
+  // });
+
+  useEffect(() => {
+    // Function to handle authentication state change
+    const handleAuthChange = (user) => {
+      if (user && localStorage.getItem("isAuth")) {
+        // User is authenticated
+        setIsAuth(true);
+        localStorage.setItem("isAuth", JSON.stringify(true));
+      } else {
+        // User is not authenticated
+        setIsAuth(false);
+        localStorage.setItem("isAuth", JSON.stringify(false));
+       // Unauthorized()
+      }
+    };
+
+    // Set up Firebase auth listener
+    const unsubscribe = auth.onAuthStateChanged(handleAuthChange);
+
+    // Clean up subscription on component unmount
+    return () => unsubscribe();
+  }, []);
+
+
+  console.log(isAuth)
+  console.log("########################")
+  console.log("########################")
+  console.log(auth)
+
+
   const [isAdmin, setisAdmin] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
   const uid = localStorage.getItem("uid") || "";
-  const [loading, setLoading] = useState(true); // Add loading state
+  const email = localStorage.getItem("email") || "";
+  const [loading, setLoading] = useState(true); // Add loading state`
   const [isCollapsed, setIsCollapsed] = useState(true);
+  // console.log("##########Approved or not ? #################")
+  // console.log(isApproved)
 
   // const[active, setActive] = useState(false);
   // const postCollectionRef = collection(db, process.env.REACT_APP_ADMIN_DATABSE);
@@ -131,38 +166,37 @@ function App() {
   };
 
   useEffect(() => {
-    const userDocRef = collection(db, process.env.REACT_APP_ADMIN_USERS);
-    const checkAdmin = async () => {
-      const getUser = await getDocs(userDocRef);
-
-      getUser.forEach((currentUser) => {
-        if (currentUser.data().id === uid) {
-          if (currentUser.data().isAdmin === true) {
-            setisAdmin(true);
+    const checkUserStatus = async () => {
+      try {
+        const userDocRef = collection(db, process.env.REACT_APP_ADMIN_USERS);
+        const getUserDocs = await getDocs(userDocRef);
+        let userData = null;
+  
+        getUserDocs.forEach((doc) => {
+          if (doc.data().email === email) {
+            userData = doc.data();
           }
+        });
+  
+        if (userData) {
+          setisAdmin(userData.isAdmin);
+          setIsApproved(userData.isApproved);
         }
-      });
+  
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      }
     };
-
-    const checkApproved = async () => {
-      const getUser = await getDocs(userDocRef);
-      getUser.forEach((currentUser) => {
-        if (currentUser.data().id === uid) {
-          if (currentUser.data().isApproved === true) {
-            setIsApproved(true);
-          } else {
-            setIsApproved(false);
-          }
-        }
-      });
-    };
-
-    const checkLoading = async () => {
-      await Promise.all([checkAdmin(), checkApproved()]);
+  
+    if (email) {
+      checkUserStatus();
+    } else {
       setLoading(false);
-    };
-    checkLoading();
-  }, [uid]);
+    }
+  }, [email]);
+  
 
   // useEffect(() => {
   //   let timer;
@@ -318,7 +352,7 @@ function App() {
 
                 </Link>
 
-                
+                {/* {isAuth ? ( */}
                   <Link
                     className="nav-link"
                     onClick={signUserOut}
@@ -401,7 +435,7 @@ function App() {
                <Route path = '/pdfList' element={<><PdfList isAuth={isAuth}/> <Unverified/> </>}/>
                {/* <Route path="/pdfviewerpage" element={<><PdfList isAuth={isAuth}/> <Unverified/> </>} /> */}
               <Route
-                path="/posts"
+                path="/posts" 
                 element={
                   <>
                     <Navigate to="/login" /> <Unverified />
