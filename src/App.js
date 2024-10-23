@@ -34,6 +34,8 @@ function App() {
   // const aceessTimer = 1000*5; // 20 sec
   const navigate = useNavigate();
   const AUTO_LOGOUT_TIME = 60 * 30 * 1000;
+
+  const totalTime = 30;
   
   const [isAuth, setIsAuth] = useState(false);// 30 min
   // const [isAuth, setIsAuth] = useState(() => {
@@ -389,7 +391,8 @@ function App() {
               <Route path="/" element={<Landing isAuth={isAuth} />} />
               <Route path="/team" element={<Team isAuth={isAuth}/>}/>
               <Route path = '/pdfList' element={<PdfList isAuth={isAuth}/>}/>
-              <Route path = '/articleList' element={<ArticleList isAuth={isAuth}/>}/>
+              {/* <Route path = '/articleList' element={<ArticleList isAuth={isAuth}/>}/> */}
+              <Route path = '/articleList' element={<ArticleList isAuth={isAuth} totalTime={totalTime}/>}/>
               <Route path = '/categorypdfList' element={<CategoryPdfList isAuth={isAuth}/>}/>
               <Route
                 path="/posts"
