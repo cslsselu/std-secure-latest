@@ -136,7 +136,7 @@ const PdfList = () => {
             {[...Array(numPages).keys()].map((pageIndex) => (
               <Page key={`page_${pageIndex + 1}`} pageNumber={pageIndex + 1} renderAnnotationLayer={false} renderTextLayer={false} style={{ width: 1200}}/>
             ))}
-          </Document>
+          </Document> 
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowPdfModal(false)}>

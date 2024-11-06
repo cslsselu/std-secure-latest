@@ -31,6 +31,9 @@ function SignUp() {
             hideProgressBar: true,
             closeOnClick: true,
           });
+          setTimeout(() => {
+            window.location.pathname = "/";
+          }, 1000);
         }
         const email = auth.currentUser.email;
         const id = auth.currentUser.uid;

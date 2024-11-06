@@ -73,16 +73,22 @@ function Login({ setIsAuth }) {
 
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        console.log(userCredential);
+        console.log({userCredential});
+       // alert("hello")
         if (!userCredential.user.emailVerified) {
           toast.error("Unverified user. Please check your email.");
           sendEmailVerification(auth.currentUser);
         } else {
+          
+          
+          localStorage.setItem("email", userCredential.user.email)
           setIsAuth(true);
           localStorage.setItem("isAuth", true);
           localStorage.setItem("uid", userCredential.user.uid);
-          navigate("/posts");
-          Logger({ eventType: 'login'});
+          console.log(userCredential.user.email)
+          //alert("inside else")
+          //navigate("/login");
+          // Logger({ eventType: 'login'});
         }
         const name = userCredential.user.displayName;
         const email = userCredential.user.email;
@@ -110,7 +116,10 @@ function Login({ setIsAuth }) {
             isApproved: false,
           });
         }
+        navigate("/posts");
       })
+
+      
       .catch((error) => {
         toast.error(error.code.replace("auth/", ""));
       });

@@ -76,7 +76,7 @@ function Admin() {
         process.env.REACT_APP_ADMIN_USERS
       );
       const querySnapshot = await getDocs(
-        query(usersCollectionRef, where("id", "==", user.id))
+        query(usersCollectionRef, where("email", "==", user.email))
       );
       const userRef = doc(usersCollectionRef, querySnapshot.docs[0].id);
       const currentIsApproved = querySnapshot.docs[0].data().isApproved;

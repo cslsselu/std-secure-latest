@@ -33,26 +33,41 @@ function App() {
   const postId = sessionStorage.getItem("postId") ; 
   // const aceessTimer = 1000*5; // 20 sec
   const navigate = useNavigate();
-  const AUTO_LOGOUT_TIME = 60 * 30 * 1000;
+  const AUTO_LOGOUT_TIME = 60 * 30 * 10000;
 
   const totalTime = 30;
   
-  const [isAuth, setIsAuth] = useState(false);// 30 min
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth") === "true");
+  //const [isAuth, setIsAuth] = useState(true);
+  // const [isApproved, setIsApproved] = useState(localStorage.getItem("isApproved") === "true")
+  const [isApproved, setIsApproved] = useState(null)
+  const [isAdmin, setisAdmin] = useState(false);
+  //const email = localStorage.getItem("email") || "";
+ // console.log("isApproved", isApproved)
+  //alert(localStorage.getItem("isApproved"))
   // const [isAuth, setIsAuth] = useState(() => {
   //   const storedAuth = localStorage.getItem("isAuth");
   //   return storedAuth ? JSON.parse(storedAuth) : false;
   // });
 
   useEffect(() => {
+    //alert(email)
+    const email = localStorage.getItem("email")
+    console.log("email", email)
+    //alert(email)
     // Function to handle authentication state change
     const handleAuthChange = (user) => {
+
       if (user && localStorage.getItem("isAuth")) {
-        // User is authenticated
-        setIsAuth(true);
-        localStorage.setItem("isAuth", JSON.stringify(true));
+       // alert("checking the user status")
+        //alert(user.email)
+
+        checkUserStatus(); 
+
       } else {
-        // User is not authenticated
+
         setIsAuth(false);
+        setIsApproved(false);
         localStorage.setItem("isAuth", JSON.stringify(false));
        // Unauthorized()
       }
@@ -63,20 +78,23 @@ function App() {
 
     // Clean up subscription on component unmount
     return () => unsubscribe();
-  }, []);
+  }, [localStorage.getItem("email")]);
 
 
   console.log(isAuth)
   console.log("########################")
   console.log("########################")
   console.log(auth)
+  console.log("isApproved", isApproved)
+  console.log("isAuth", isAuth)
 
 
-  const [isAdmin, setisAdmin] = useState(false);
-  const [isApproved, setIsApproved] = useState(true);
+
+  //const [isAdmin, setisAdmin] = useState(false);
+  //const [isApproved, setIsApproved] = useState(false);
   const uid = localStorage.getItem("uid") || "";
   const email = localStorage.getItem("email") || "";
-  const [loading, setLoading] = useState(true); // Add loading state`
+  const [loading, setLoading] = useState(true); // Add loading state
   const [isCollapsed, setIsCollapsed] = useState(true);
   // console.log("##########Approved or not ? #################")
   // console.log(isApproved)
@@ -123,8 +141,20 @@ function App() {
   };
 
   const Unverified = () => {
-    setIsAuth(false);
-    localStorage.clear();
+    //alert(localStorage.getItem("isApproved"))
+    
+    //alert("Inside unverified")
+    //alert(userData.isApproved)
+
+    
+   // alert(localStorage.getItem("email"));
+    //checkUserStatus()
+    //alert(isApproved)
+    //checkUserStatus()
+    //alert(isApproved)
+   // setIsAuth(true);
+    //setIsApproved(false);
+    //localStorage.clear();
 
     toast.error(
       "USER NOT APPROVED!!! Please contact with the admin to get the approval !!!",
@@ -134,6 +164,8 @@ function App() {
         theme: "colored",
       }
     );
+    //localStorage.clear();
+   // setIsAuth(true);
   };
   const Footer =()=>{
     const location = useLocation()
@@ -157,15 +189,74 @@ function App() {
       await Logger({ eventType: 'logout' }); //asyc because this call need to wait until the log is tracked
   
        signOut(auth);
+
+      // setIsAuth(false);
+  setIsApproved(false);
+    //localStorage.removeItem("isAuth");
+    localStorage.removeItem("isApproved");
+    localStorage.removeItem("email")
   
       localStorage.clear();
-      //sessionStorage.clear();
-      setIsAuth(false);
+      sessionStorage.clear();
       window.location.pathname = "/";
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
+
+
+  const checkUserStatus = async () => {
+    //alert("checking")
+    //alert(email)
+    //alert("checking")
+    try {
+      const userDocRef = collection(db, process.env.REACT_APP_ADMIN_USERS);
+      const getUserDocs = await getDocs(userDocRef);
+      console.log("userdocccccccccccccccccccccccs")
+      console.log(getUserDocs)
+      let userData = null;
+      const email = localStorage.getItem("email")
+      //alert(email)
+  
+      getUserDocs.forEach((doc) => {
+        if (doc.data().email === email) {
+          userData = doc.data();
+        }
+      });
+     //alert("see user data in console")
+      console.log(userData)
+      //alert(email)
+  
+      if (userData) {
+        
+        //alert("user data is present")
+        //alert(userData.isApproved)
+       // alert("present")
+        //alert("user is present")
+       // alert(user.email)
+        //alert("Yes user data")
+        //setIsAuth(true);
+       // setIsAdmin(userData.isAdmin);
+      // alert(userData.isApproved)
+        setIsApproved(userData.isApproved);
+        //alert(isApproved)
+        // if (!userData.isApproved) {
+        //   Unverified();  // Show error if not approved
+        // }
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setLoading(false);
+    }
+  };
+  
+
+
+  // useEffect(() => {
+  //   setIsCollapsed(true);
+  // }, [isAuth, isApproved]);
+  
 
   useEffect(() => {
     const checkUserStatus = async () => {
@@ -179,10 +270,19 @@ function App() {
             userData = doc.data();
           }
         });
+
+        console.log("**************************1111");
+        console.log("**************************22222");
   
         if (userData) {
+          //alert("Inside user data")
+         // setIsAuth(true);
           setisAdmin(userData.isAdmin);
           setIsApproved(userData.isApproved);
+          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+          console.log(isApproved)
+         // console.log(isAuth)
         }
   
         setLoading(false);
@@ -251,224 +351,184 @@ function App() {
     return <div></div>; // Render loading state while checking admin status
   }
 
-  {return (
-    <>
-   
-      <nav className="navbar navbar-expand-md navbar-dark bg-dark" style={{position:'fixed'}}>
-        <div className="container-fluid">
-          <div className="logo" style={{ position: "absolute", top: "1px" }}>
-            <img
-              src="/secure.png"
-              alt="Secure Logo"
-              height="50px"
-              width="50px"
-            />
-          </div>
-          <Link
-            className="navbar-brand"
-            to="/"
-            style={{ marginLeft: "55px", color: "orange" }}
-          >
-            E-Lib
-          </Link>
-
-          <button
-            className="navbar-toggler"
-            style={{ paddingBottom: "20px" }}
-            type="button"
-            onClick={handleToggle}
-            aria-expanded={!isCollapsed}
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div
-            className={`bg-dark collapse navbar-collapse${
-              isCollapsed ? "" : " show"
-            }`}
-            id="navbarNavAltMarkup"
-          >
-            <div onClick={handleToggle} className="bg-dark navbar-nav ms-auto">
-              <Link to="/" className="nav-link" aria-current="page">
-                Home
-              </Link>
-              {/* <Link to='/team' className="nav-link" >
-               Team
-              </Link> */}
-{/* 
-              <Link className="nav-link">
-        <DropdownComponent />
-      </Link>
-
-      <Link className="nav-link">
-        <CategoryDropdownComponent />
-      </Link> */}
-
-      
-
-              {/* <Link to='/pdfList' className="nav-link" >
-
-               Article List
-
-
-              </Link> */}
-
-              <Link to="/posts" className="nav-link"> Featured Article </Link>
-
-              {isAuth ? (
-                <>
-                  {isApproved && (
-                    <>
-                      {isAdmin && (
-                        <>
-                          <Link to="/createpost" className="nav-link">
-                            Create Post
-                          </Link>
-                          <Link to="/admindashboard" className="nav-link">
-                            Admin
-                          </Link>
-                        </>
-                      )}
-                    </>
-                  )}
-
-              <Link to='/team' className="nav-link" >
-               Team
-              </Link>
-
-              
-              <Link className="nav-link">
-        <DropdownComponent />
-      </Link>
-
-      <Link className="nav-link">
-        <CategoryDropdownComponent />
-
-        
-      </Link>
-
-                <Link to='/articleList' className="nav-link" >
-
-                Article List
-
-
-                </Link>
-
-                {/* {isAuth ? ( */}
-                  <Link
-                    className="nav-link"
-                    onClick={signUserOut}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Log Out
-                  </Link>
-
-                  
-                </>
-              ) : (
-                <Link to="/login" className="nav-link ">
-                  Login
-                </Link>
-              )}
-            </div>
-          </div>
+ {return (
+  <>
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark" style={{ position: 'fixed' }}>
+      <div className="container-fluid">
+        <div className="logo" style={{ position: "absolute", top: "1px" }}>
+          <img src="/secure.png" alt="Secure Logo" height="50px" width="50px" />
         </div>
-      </nav>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        theme="colored"
-        hideProgressBar={true}
-        closeOnClick={true}
-      />
-      {isAuth ? (
-        <>
-          {isApproved ? (
-            <Routes>
-              <Route path="/login" element={<PdfViewerPage setIsAuth={setIsAuth} />} />
-              <Route path="/signup" element={<SignUp />} />
+        <Link className="navbar-brand" to="/" style={{ marginLeft: "55px", color: "orange" }}>
+          E-Lib
+        </Link>
 
-              <Route path="/" element={<Landing isAuth={isAuth} />} />
-              <Route path="/team" element={<Team isAuth={isAuth}/>}/>
-              <Route path = '/pdfList' element={<PdfList isAuth={isAuth}/>}/>
-              {/* <Route path = '/articleList' element={<ArticleList isAuth={isAuth}/>}/> */}
-              <Route path = '/articleList' element={<ArticleList isAuth={isAuth} totalTime={totalTime}/>}/>
-              <Route path = '/categorypdfList' element={<CategoryPdfList isAuth={isAuth}/>}/>
-              <Route
-                path="/posts"
-                element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}
-              />
-              <Route path="/view" element={<ViewPost />} />
-              <Route path="/viewLogs" element={<ViewLogs />} />
-              {isAdmin ? (
-                <>
-                  <Route
-                    path="/createpost"
-                    element={<CreatePost isAuth={isAuth} />}
-                  />
-                  <Route
-                    path="/admindashboard"
-                    element={<Admin isAuth={isAuth} />}
-                  />
-                </>
-              ) : (
-                <Route path="/createpost" element={<Unauthorized />} />
-              )}
-            </Routes>
-          ) : (
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <>
-                    <Landing isAuth={isAuth} />
-                    <Unverified />
-                  </>
-                }
-              />
-               <Route
-                path="/team"
-                element={
-                  <>
-                    <Team isAuth={isAuth} />
-                    <Unverified />
-                  </>
-                }
-              />
-               <Route path = '/pdfList' element={<><PdfList isAuth={isAuth}/> <Unverified/> </>}/>
-               {/* <Route path="/pdfviewerpage" element={<><PdfList isAuth={isAuth}/> <Unverified/> </>} /> */}
-              <Route
-                path="/posts" 
-                element={
-                  <>
-                    <Navigate to="/login" /> <Unverified />
-                  </>
-                }
-              />
-              <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-            </Routes>
-          )}
-        </>
-      ) : (
-        <Routes>
-          <Route path="/signup" element={<SignUp />} />
+        <button
+          className="navbar-toggler"
+          style={{ paddingBottom: "20px" }}
+          type="button"
+          onClick={handleToggle}
+          aria-expanded={!isCollapsed}
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div
+          className={`bg-dark collapse navbar-collapse${isCollapsed ? "" : " show"}`}
+          id="navbarNavAltMarkup"
+        >
+          <div onClick={handleToggle} className="bg-dark navbar-nav ms-auto">
+            <Link to="/" className="nav-link" aria-current="page">
+              Home
+            </Link>
 
-          <Route path="/" element={<Landing isAuth={isAuth} />} />
-          <Route path="/team" element={<Team isAuth={isAuth} />} />
-          <Route path='/pdfList' element={<PdfList isAuth={isAuth}/>}/>
-          <Route path = '/categorypdfList' element={<CategoryPdfList isAuth={isAuth}/>}/>
-          <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-          <Route path='/PdfViewerPage' element={<PdfViewerPage isAuth={isAuth}/> } />
-          <Route path="/posts" element={<Posts isAuth={isAuth} isAdmin={isAdmin} />}/>
-          <Route path="/view" element={<ViewPost />} />
-        </Routes>
-      )}
-      <Footer/>
-  
+            <Link to="/posts" className="nav-link">
+              Featured Article
+            </Link>
 
-    </>
-  )
-     };
+            {isAuth ? (
+              <>
+                {isApproved && (
+                  <>
+                    {isAdmin && (
+                      <>
+                        <Link to="/createpost" className="nav-link">
+                          Create Post
+                        </Link>
+                        <Link to="/admindashboard" className="nav-link">
+                          Admin
+                        </Link>
+                      </>
+                    )}
+
+                    <Link to="/team" className="nav-link">
+                      Team
+                    </Link>
+
+                    <Link to="/articleList" className="nav-link">
+                  Article List
+                </Link>
+
+                
+                <Link className="nav-link">
+                  <DropdownComponent />
+                </Link>
+
+                <Link className="nav-link">
+                  <CategoryDropdownComponent />
+                </Link>
+
+                <Link
+                  className="nav-link"
+                  onClick={signUserOut}
+                  style={{ cursor: "pointer" }}
+                >
+                  Log Out
+                </Link>
+                  </>
+                )}
+
+
+                {/* <Link to="/articleList" className="nav-link">
+                  Article List
+                </Link> */}
+
+                {/* <Link
+                  className="nav-link"
+                  onClick={signUserOut}
+                  style={{ cursor: "pointer" }}
+                >
+                  Log Out
+                </Link> */}
+              </>
+            ) :  (
+              null
+            )}   
+
+
+
+  {isAuth && isApproved ? null : (
+    <Link to="/login" className="nav-link">
+      Login
+    </Link>
+  )}
+
+         
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      theme="colored"
+      hideProgressBar={true}
+      closeOnClick={true}
+    />
+
+    {isAuth ? (
+      <>
+        {isApproved ? (
+          <Routes>
+            <Route path="/login" element={<PdfViewerPage setIsAuth={setIsAuth} />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/" element={<Landing isAuth={isAuth} />} />
+            <Route path="/team" element={<Team isAuth={isAuth} />} />
+            <Route path="/pdfList" element={<PdfList isAuth={isAuth} isApproved={isApproved} />} />
+            <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={totalTime} />} />
+            <Route path="/categorypdfList" element={<CategoryPdfList isAuth={isAuth} />} />
+            <Route path="/posts" element={<Posts isAuth={isAuth}  />} />
+            <Route path="/view" element={<ViewPost />} />
+            <Route path="/viewLogs" element={<ViewLogs />} />
+            {isAdmin ? (
+              <>
+                <Route path="/createpost" element={<CreatePost isAuth={isAuth} />} />
+                <Route path="/admindashboard" element={<Admin isAuth={isAuth} />} />
+              </>
+            ) : (
+              <Route path="/createpost" element={<Unauthorized />} />
+            )}
+          </Routes>
+        ) : (
+          <Routes>
+            <Route path="/" element={<><Landing isAuth={isAuth} /><Unverified /></>} />
+            <Route path="/team" element={<><Team isAuth={isAuth} /><Unverified /></>} />
+            <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={totalTime} />} />
+            <Route path="/pdfList" element={<><PdfList isAuth={isAuth} /><Unverified /></>} />
+            <Route path="/posts" element={<><Navigate to="/login" /><Unverified /></>} />
+            <Route path="/login" element={<><Login setIsAuth={setIsAuth} /> </>} />
+          </Routes>
+
+            
+        //   <Routes>
+        //   <Route path="/" element={<Landing isAuth={isAuth} />} />
+        //   <Route path="/team" element={<Team isAuth={isAuth} />} />
+        //   <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={totalTime} />} />
+        //   <Route path="/pdfList" element={<PdfList isAuth={isAuth} />} />
+        //   <Route path="/posts" element={<Navigate to="/login" />} />
+        //   <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+        // </Routes>
+        
+        )}
+      </>
+    ) : (
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<Landing isAuth={isAuth} />} />
+        <Route path="/team" element={<Team isAuth={isAuth} />} />
+        <Route path="/pdfList" element={<PdfList isAuth={isAuth} />} />
+        <Route path="/categorypdfList" element={<CategoryPdfList isAuth={isAuth} />} />
+        <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+        <Route path="/PdfViewerPage" element={<PdfViewerPage isAuth={isAuth} />} />
+        <Route path="/posts" element={<Posts isAuth={isAuth} isAdmin={isAdmin} />} />
+        <Route path="/view" element={<ViewPost />} />
+      </Routes>
+    )}
+
+    <Footer />
+  </>
+);
+}
 }
 
 
