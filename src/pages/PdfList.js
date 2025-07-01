@@ -4,6 +4,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Button, Table, FormControl, Modal } from 'react-bootstrap';
 import { Document, Page } from "react-pdf";
 import "./pdfList.css";
+import UpdatePostViews from "../utils/updatePostViews";
 
 const PdfList = () => {
   const [pdfs, setPdfs] = useState([]);
@@ -79,6 +80,8 @@ const PdfList = () => {
     } else {
       console.error("Invalid access type provided.");
     }
+
+    UpdatePostViews(pdfUrl);
   };
 
 

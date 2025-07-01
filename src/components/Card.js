@@ -6,6 +6,7 @@ import { Button, Modal } from "react-bootstrap";
 import Countdown from "react-countdown";
 import { Document, Page, pdfjs } from "react-pdf";
 import "./Card.css";
+
 // import Logger from './Logger';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -34,6 +35,8 @@ export default function Card({
   const openPost = (postId, postUrl) => {
     setPdfUrl(postUrl);
     setShowPdfModal(true);
+
+    //todo: Need to insert the count and user here
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => {

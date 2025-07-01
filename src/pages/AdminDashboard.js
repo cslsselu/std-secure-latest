@@ -27,6 +27,63 @@ function Admin() {
   const [showConfirmModalDelete, setShowConfirmModalDelete] = useState(false);
   const [userToApprove, setUserToApprove] = useState("");
   const uid = localStorage.getItem("uid") || "";
+  const [time, setTime] = useState("");
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    const fetchTimerValue = async () => {
+      try {
+        const timerCollection = collection(db, "timer");
+        const timerSnapshot = await getDocs(timerCollection);
+
+        if (!timerSnapshot.empty) {
+          const firstDoc = timerSnapshot.docs[0];
+          const secondsValue = firstDoc.data().seconds; 
+          //setTime(secondsValue);
+          setPlaceholder(secondsValue);
+        } else {
+          console.log("No timer document found.");
+        }
+      } catch (error) {
+        console.error("Error fetching timer value:", error);
+      }
+    };
+
+    fetchTimerValue();
+  }, []); // Empty dependency array to run only on mount
+
+
+  const handleSetTimer = async () => {
+    if (!time) {
+      alert("Please enter a valid time.");
+      return;
+    }
+
+    alert(time)
+
+    try {
+      const timerCollection = collection(db, "timer");
+      const timerSnapshot = await getDocs(timerCollection);
+      
+      if (!timerSnapshot.empty) {
+        const firstDoc = timerSnapshot.docs[0]; // Get the first document
+        const timerRef = doc(db, "timer", firstDoc.id);
+
+        await updateDoc(timerRef, {
+          seconds: parseInt(time, 10), // Convert input to number
+         // seconds: time,
+        });
+
+        alert("Timer updated successfully!");
+        setTime(""); // Reset input
+      } else {
+        alert("No timer document found.");
+      }
+    } catch (error) {
+      console.error("Error updating timer:", error);
+      alert("Failed to update timer.");
+    }
+  }
 
   const fetchUser = async () => {
     const usersCollectionRef = collection(
@@ -129,6 +186,52 @@ function Admin() {
   return (
     <>
       <div className="admin-container">
+      <div className="timer-container" 
+  style={{ 
+    marginTop: "20px",  
+    marginBottom: "15px", 
+    display: "flex", 
+    alignItems: "center", 
+    gap: "10px" 
+  }}>
+  
+  <input
+    type="text"
+    placeholder={`current: ${placeholder} sec`}
+    onChange={(e) => setTime(e.target.value)}
+    className="form-control"
+    style={{ 
+      width: "160px", 
+      padding: "8px", 
+      borderRadius: "8px", 
+      border: "1px solid #ccc",
+      fontSize: "14px"
+    }}
+  />
+  
+  <button 
+    className="btn btn-primary"
+    style={{
+      padding: "8px 15px", 
+      fontSize: "14px",
+      fontWeight: "bold",
+      borderRadius: "8px", 
+      backgroundColor: "#007bff", 
+      border: "none", 
+      boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)", 
+      transition: "0.3s ease",
+      cursor: "pointer"
+    }}
+    onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"}
+    onMouseOut={(e) => e.target.style.backgroundColor = "#007bff"}
+    onClick={handleSetTimer}
+  >
+    Set Timer
+  </button>
+
+</div>
+
+
         <center>
           <h2> Admin Dashboard</h2>
           <hr />
@@ -161,23 +264,19 @@ function Admin() {
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td style={{ fontSize: "13px" }}>
-                  {user.date ? user.date.toDate().toLocaleString() : 'N/A'}
+                    {user.date ? user.date.toDate().toLocaleString() : 'N/A'}
                   </td>
                   <td>{user.isAdmin ? "Admin" : "User"}</td>
                   <td>
                     {user.isApproved ? (
                       <div>
                         &nbsp; &nbsp; &nbsp;
-                        <FaSquareCheck
-                          style={{ color: "#17c200", fontSize: "20px" }}
-                        />
+                        <FaSquareCheck style={{ color: "#17c200", fontSize: "20px" }} />
                       </div>
                     ) : (
                       <div>
                         &nbsp; &nbsp; &nbsp;
-                        <FaSquareXmark
-                          style={{ color: "red", fontSize: "20px" }}
-                        />
+                        <FaSquareXmark style={{ color: "red", fontSize: "20px" }} />
                       </div>
                     )}
                   </td>
@@ -207,14 +306,14 @@ function Admin() {
                     </div>
                   </td>
                   <td>
-                <button
-                  className="btn edit-button"
-                  style={{ padding: "0px", color: "blue" }}
-                  onClick={() => handleViewLogs(user)}
-                >
-                  View Logs
-                </button>
-              </td>
+                    <button
+                      className="btn edit-button"
+                      style={{ padding: "0px", color: "blue" }}
+                      onClick={() => handleViewLogs(user)}
+                    >
+                      View Logs
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -246,7 +345,7 @@ function Admin() {
               </div>
             )}
             <hr />
-            Are you sure to approve this changes?
+            Are you sure to approve these changes?
             <br />
           </Modal.Body>
           <Modal.Footer>
@@ -266,7 +365,7 @@ function Admin() {
             </Button>
           </Modal.Footer>
         </Modal>
-{/* Delete Model */}
+        {/* Delete Modal */}
 
 <Modal
   show={showConfirmModalDelete}

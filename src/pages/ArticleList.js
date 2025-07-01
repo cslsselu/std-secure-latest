@@ -5,6 +5,7 @@ import { collection, getDocs, query, where, doc, getDoc, updateDoc } from 'fireb
 import { Button, Table, FormControl, Modal } from 'react-bootstrap';
 import { Document, Page } from "react-pdf";
 import "./pdfList.css";
+import UpdatePostViews from "../utils/updatePostViews";
 
 const PdfList = ({totalTime}) => {
   const [pdfs, setPdfs] = useState([]);
@@ -15,6 +16,7 @@ const PdfList = ({totalTime}) => {
   const [numPages, setNumPages] = useState(null);
   const selectedGroup = sessionStorage.getItem('selectedGroup');
   const selectedCategory = sessionStorage.getItem('selectedCategory');
+  const [viewedCount, setViewedCount] = useState(null);
   // const type = sessionStorage.getItem('type');
 
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -48,6 +50,44 @@ const PdfList = ({totalTime}) => {
     fetchPdfs();
 
   }, [selectedGroup, selectedCategory]);
+
+
+    const getPostViewCount = async (url) => {
+        try {
+            console.log("Fetching view count for:", url);
+
+            const postsRef = collection(db, "pdfs");
+            const q = query(postsRef, where("url", "==", url));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                let viewCount = 0;
+                querySnapshot.forEach((doc) => {
+                    viewCount = doc.data().viewed_count || 0;
+                });
+
+                setViewedCount(viewCount);
+            } else {
+                console.log("Post not found");
+            }
+        } catch (error) {
+            console.error("Error fetching view count:", error);
+        }
+    };
+
+    // if (url) {
+    //     getPostViewCount(url);
+    // };
+
+  //   useEffect(() => {
+  //     if (pdfUrl && showPdfModal) {
+  //         const fetchViewCount = async () => {
+  //             const count = await getPostViewCount(pdfUrl);
+  //             setViewCount(count);
+  //         };
+  //         fetchViewCount();
+  //     }
+  // }, [pdfUrl, showPdfModal]);
 
   // Unlock the PDF when the session expires or the user closes it
   const unlockPdf = async (pdfId) => {
@@ -123,6 +163,7 @@ const PdfList = ({totalTime}) => {
 
     if(access === "restricted"){
       setPdfUrl(pdfUrl);
+      getPostViewCount(pdfUrl);
       setShowPdfModal(true);
       setshowPdfModalNormal(false); // Close other modal if open
   
@@ -145,6 +186,8 @@ const PdfList = ({totalTime}) => {
     else{
       console.error("Invalid access type provided.");
     }
+
+    UpdatePostViews(pdfUrl);
   }
 
   const handleCloseModal = async () => {
@@ -216,7 +259,10 @@ const PdfList = ({totalTime}) => {
           <Modal.Title>PDF Viewer</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p className='mb-2'>Time Remaining: {formatTime(timeRemaining)}</p>
+        <div className="d-flex justify-content-between mb-3">
+      <p className="mb-0">Time Remaining: {formatTime(timeRemaining)}</p>
+      <p className="mb-0">Viewed Count: {viewedCount}</p>
+    </div>
           <Document className="pdf-content"
             file={memoizedFile} // Use memoized file prop here
             onLoadSuccess={onDocumentLoadSuccess}

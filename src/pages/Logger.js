@@ -35,7 +35,7 @@ async function Logger({ eventType, remarks = null }) {
       username: auth.currentUser.displayName,
       email: auth.currentUser.email,
       type: eventType,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }),
       remarks: remarks,
     });
 

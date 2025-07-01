@@ -35,7 +35,7 @@ function App() {
   const navigate = useNavigate();
   const AUTO_LOGOUT_TIME = 60 * 30 * 10000;
 
-  const totalTime = 30;
+  //const totalTime = 30;
   
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth") === "true");
   //const [isAuth, setIsAuth] = useState(true);
@@ -49,6 +49,30 @@ function App() {
   //   const storedAuth = localStorage.getItem("isAuth");
   //   return storedAuth ? JSON.parse(storedAuth) : false;
   // });
+
+   const [pdfTimer, setPdfTimer] = useState("");
+  
+    useEffect(() => {
+      const fetchTimerValue = async () => {
+        try {
+          const timerCollection = collection(db, "timer");
+          const timerSnapshot = await getDocs(timerCollection);
+  
+          if (!timerSnapshot.empty) {
+            const firstDoc = timerSnapshot.docs[0];
+            const secondsValue = firstDoc.data().seconds; 
+            setPdfTimer(secondsValue);
+          } else {
+            console.log("No timer document found.");
+          }
+        } catch (error) {
+          console.error("Error fetching timer value:", error);
+        }
+      };
+  
+      fetchTimerValue();
+    }, []); // Empty dependency array to run only on mount
+  
 
   useEffect(() => {
     //alert(email)
@@ -475,7 +499,7 @@ function App() {
             <Route path="/" element={<Landing isAuth={isAuth} />} />
             <Route path="/team" element={<Team isAuth={isAuth} />} />
             <Route path="/pdfList" element={<PdfList isAuth={isAuth} isApproved={isApproved} />} />
-            <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={totalTime} />} />
+            <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={pdfTimer} />} />
             <Route path="/categorypdfList" element={<CategoryPdfList isAuth={isAuth} />} />
             <Route path="/posts" element={<Posts isAuth={isAuth}  />} />
             <Route path="/view" element={<ViewPost />} />
@@ -493,7 +517,7 @@ function App() {
           <Routes>
             <Route path="/" element={<><Landing isAuth={isAuth} /><Unverified /></>} />
             <Route path="/team" element={<><Team isAuth={isAuth} /><Unverified /></>} />
-            <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={totalTime} />} />
+            <Route path="/articleList" element={<ArticleList isAuth={isAuth} totalTime={pdfTimer} />} />
             <Route path="/pdfList" element={<><PdfList isAuth={isAuth} /><Unverified /></>} />
             <Route path="/posts" element={<><Navigate to="/login" /><Unverified /></>} />
             <Route path="/login" element={<><Login setIsAuth={setIsAuth} /> </>} />
